@@ -7,13 +7,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-const char MESSAGE[] = "Hello UPO student!\n";
-
 int main(int argc, char *argv[]) {
 
   int simpleSocket = 0;
   int simplePort = 0;
   int returnStatus = 0;
+  // TODO: I need buffer to stay in the message when there's other things
+  // written in message
+  char msg[256] = "";
+  char buffer[256] = "";
   struct sockaddr_in simpleServer; // endpoint
 
   /* make sure we have a port number */
@@ -88,9 +90,13 @@ int main(int argc, char *argv[]) {
       exit(1);
     }
 
+    /* read the name and create a response message */
+    returnStatus = read(simpleChildSocket, buffer, sizeof(buffer));
+    sprintf(msg, "Hello %s!\n", buffer);
+
     /* handle the new connection request  */
     /* write out our message to the client */
-    write(simpleChildSocket, MESSAGE, strlen(MESSAGE));
+    write(simpleChildSocket, msg, strlen(msg));
     close(simpleChildSocket);
   }
 

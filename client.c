@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h> // WARN: this is strings.h, not string.h
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]) {
   int simplePort = 0;
   int returnStatus = 0;
   char buffer[256] = "";
+  const char msg[] = "rie";
   struct sockaddr_in simpleServer;
 
   if (3 != argc) {
@@ -56,6 +58,9 @@ int main(int argc, char *argv[]) {
     close(simpleSocket);
     exit(1);
   }
+
+  /* first send the name */
+  write(simpleSocket, msg, strlen(msg));
 
   /* get the message from the server   */
   returnStatus = read(simpleSocket, buffer, sizeof(buffer));
